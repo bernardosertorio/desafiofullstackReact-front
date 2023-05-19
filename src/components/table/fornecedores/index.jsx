@@ -34,7 +34,7 @@ import ModalComponent from "../../modal";
 import { useFornecedor } from "../../../contexts/fornecedores.context";
 
 const TableFornecedor = ({ fornecedores }) => {
-    const { findFornecedores, createFornecedor, deleteFornecedorById } = useFornecedor();
+    const { findFornecedores, createFornecedor, deleteFornecedorByCNPJouCPF } = useFornecedor();
 
     const modalCreateFornecedorDisclousure = useDisclosure();
     const modalUpdateFornecedorDisclousure = useDisclosure();
@@ -64,9 +64,8 @@ const TableFornecedor = ({ fornecedores }) => {
             )
             : [];
 
-    const handleDeleteFornecedor = async (fornecedores) => {
-        debugger
-        await deleteFornecedorById(fornecedores.cnpjCpf)
+    const handleDeleteFornecedor = async (cnpjCpf) => {
+        await deleteFornecedorByCNPJouCPF(cnpjCpf)
         await findFornecedores()
     }
 
@@ -111,7 +110,7 @@ const TableFornecedor = ({ fornecedores }) => {
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => {
-                                            handleDeleteFornecedor(fornecedores.id)
+                                            handleDeleteFornecedor(fornecedores.cnpjCpf)
                                         }}
                                     >
                                         Excluir Fornecedor

@@ -82,9 +82,9 @@ export const FornecedoresProvider = ({ children }) => {
     }
   };
 
-  const deleteFornecedorById = async (id)  => {
+  const deleteFornecedorByCNPJouCPF = async (cnpjCpf)  => {
     try {
-      await backendAPI.get(`/fornecedor/delete/${id}`);
+      await backendAPI.delete(`/fornecedor/delete/${cnpjCpf}`);
 
       return
     } catch (error) {
@@ -100,7 +100,7 @@ export const FornecedoresProvider = ({ children }) => {
         findFornecedores,
         findFornecedorById,
         updateFornecedor,
-        deleteFornecedorById
+        deleteFornecedorByCNPJouCPF
       }}
     >
       {children}
