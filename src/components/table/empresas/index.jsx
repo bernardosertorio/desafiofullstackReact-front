@@ -44,22 +44,26 @@ const TableEmpresa = ({ empresas }) => {
     const modalUpdateEmpresaDisclousure = useDisclosure();
 
     const {
-        register: regisUpdate,
         register,
         handleSubmit,
-        formState: { errors: errorUpdate, errors, isSubmitting },
-        setValue,
+        formState: { errors, isSubmitting },
         reset,
-        reset: resetUpdate,
     } = useForm();
+
+    // const {
+    //     register: regisUpdate,
+    //     handleSubmit: handleSubmitUpdate,
+    //     formState: { errors: errorUpdate, isSubmitting: isSubmittingUpdate },
+    //     reset: resetUpdate,
+    //   } = useForm();
 
     const [searchEmpresas, setSearchEmpresas] = useState("");
     const [empresasList, setEmpresasList] = useState(empresas);
 
     useEffect(() => setEmpresasList(empresas), [empresas]);
-
+    useEffect(() => console.log(errors), [errors]);
     const handleSearch = (value) => setSearchEmpresas(value);
-
+    
     const filterEmpresas =
         searchEmpresas.length > 0
             ? empresasList?.filter((empresa) =>
@@ -120,13 +124,8 @@ const TableEmpresa = ({ empresas }) => {
         );
     };
 
-    const setValueForm = (empresas) => {
-      return empresas;
-    };
-
-    const handleCreateEmpresa = async (data) => {
+    const handleCreateEmpresa = async (data) => { 
         try {
-            debugger
             if (data) {
                 await createEmpresa(data);
                 await findEmpresas();
@@ -146,6 +145,26 @@ const TableEmpresa = ({ empresas }) => {
         ),
         []
     );
+
+    const handleUpdateEmpresa = async ({
+        id,
+        field,
+        value,
+      }) => {
+        const empresasClone = _.cloneDeep(empresasList);
+        const newEmpresa = empresasClone?.map((item) => {
+          if (item._id === id) {
+            if (field === "active") {
+              item.active = !!value;
+            }
+          }
+          return item;
+        });
+    
+        if (newEmpresa) setCampaignsList(newEmpresa);
+        resetUpdate()
+        debounceFieldChangeValue(id, { [field]: value });
+      };
 
     return (
         <>
@@ -187,14 +206,14 @@ const TableEmpresa = ({ empresas }) => {
                 </Table>
             </TableContainer>
 
-            <form onSubmit={handleSubmit}>
+            <form>
                 <ModalComponent
                     title="Nova Empresa"
                     showCloseButton
                     success={{
                         text: "Salvar",
                         isSubmitting,
-                        callback: () => handleCreateEmpresa(),
+                        callback: handleSubmit(handleCreateEmpresa),
                     }}
                     {...modalCreateEmpresaDisclousure}
                 >
@@ -248,14 +267,14 @@ const TableEmpresa = ({ empresas }) => {
                     </FormControl>
                 </ModalComponent>
             </form>
-            <form >
+            {/* <form >
                 <ModalComponent
                     title="Editar Empresa"
                     showCloseButton
                     success={{
                         text: "Salvar",
-                        isSubmitting,
-                        // callback: handleSubmitUpdate(handleUpdateEmpresaForm),
+                        isSubmittingUpdate,
+                        callback: handleSubmitUpdate(handleUpdateEmpresa),
                     }}
                     {...modalUpdateEmpresaDisclousure}
                 >
@@ -309,7 +328,7 @@ const TableEmpresa = ({ empresas }) => {
                         )}
                     </FormControl>
                 </ModalComponent>
-            </form>
+            </form> */}
         </>
     );
 };

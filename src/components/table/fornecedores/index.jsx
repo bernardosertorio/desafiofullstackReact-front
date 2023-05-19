@@ -104,7 +104,6 @@ const TableFornecedor = ({ fornecedores }) => {
                                 <MenuList>
                                     <MenuItem
                                         onClick={() => {
-                                            setValueForm(fornecedores);
                                             modalUpdateFornecedorDisclousure.onToggle();
                                         }}
                                     >
@@ -126,32 +125,27 @@ const TableFornecedor = ({ fornecedores }) => {
         );
     };
 
-    const setValueForm = (fornecedores) => {
-        return fornecedores
-    };
-
-    const handleCreateEmpresa = async (data) => {
+    const handleCreateFornecedor = async (data) => {
         try {
-            debugger
             if (data) {
                 await createFornecedor(data);
                 await findFornecedores();
             }
-            modalCreateEmpresaDisclousure.onClose();
+            modalCreateFornecedorDisclousure.onClose();
             reset();
         } catch (error) {
             console.log(error);
         }
     };
 
-    const debounceFieldChangeValue = useCallback(
-        _.debounce(
-            (id, empresaData) =>
-                updateEmpresa(id, empresaData),
-            1000
-        ),
-        []
-    );
+    // const debounceFieldChangeValue = useCallback(
+    //     _.debounce(
+    //         (id, fornecedorData) =>
+    //             updateFornecedor(id, fornecedorData),
+    //         1000
+    //     ),
+    //     []
+    // );
 
     return (
         <>
@@ -194,14 +188,14 @@ const TableFornecedor = ({ fornecedores }) => {
                 </Table>
             </TableContainer>
 
-            <form onSubmit={handleSubmit}>
+            <form>
                 <ModalComponent
-                    title="Nova Empresa"
+                    title="Novo Fornecedor"
                     showCloseButton
                     success={{
                         text: "Salvar",
                         isSubmitting,
-                        callback: () => handleCreateFornecedor(),
+                        callback: handleSubmit(handleCreateFornecedor),
                     }}
                     {...modalCreateFornecedorDisclousure}
                 >
@@ -211,11 +205,11 @@ const TableFornecedor = ({ fornecedores }) => {
                             {...register("nome", { required: "Digite o nome do fornecedor" })}
                             variant="outline"
                             placeholder="Digite o Nome do Fornecedor"
-                            isInvalid={!!errors.nomeFantasia?.message}
+                            isInvalid={!!errors.nome?.message}
                             w={"full"}
                             autoFocus
                         />
-                        {errors.nomeFantasia && (
+                        {errors.nome && (
                             <FormErrorMessage>{errors.nome.message}</FormErrorMessage>
                         )}
                     </FormControl>
@@ -276,7 +270,7 @@ const TableFornecedor = ({ fornecedores }) => {
                     </FormControl>
                 </ModalComponent>
             </form>
-            <form >
+            {/* <form >
                 <ModalComponent
                     title="Editar Fornecedor"
                     showCloseButton
@@ -358,7 +352,7 @@ const TableFornecedor = ({ fornecedores }) => {
                         )}
                     </FormControl>
                 </ModalComponent>
-            </form>
+            </form> */}
         </>
     );
 };
