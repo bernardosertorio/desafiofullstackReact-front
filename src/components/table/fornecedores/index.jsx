@@ -66,7 +66,7 @@ const TableFornecedor = ({ fornecedores }) => {
 
     const handleDeleteFornecedor = async (fornecedores) => {
         debugger
-        await deleteFornecedorById(fornecedores.id)
+        await deleteFornecedorById(fornecedores.cnpjCpf)
         await findFornecedores()
     }
 

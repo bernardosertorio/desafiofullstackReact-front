@@ -38,7 +38,7 @@ import { useEmpresa } from "../../../contexts/empresas.context";
 
 
 const TableEmpresa = ({ empresas }) => {
-    const { createEmpresa, findEmpresas, updateEmpresa } = useEmpresa();
+    const { createEmpresa, findEmpresas, updateEmpresa, deleteEmpresaByCNPJ } = useEmpresa();
 
     const modalCreateEmpresaDisclousure = useDisclosure();
     const modalUpdateEmpresaDisclousure = useDisclosure();
@@ -63,7 +63,7 @@ const TableEmpresa = ({ empresas }) => {
     useEffect(() => setEmpresasList(empresas), [empresas]);
     useEffect(() => console.log(errors), [errors]);
     const handleSearch = (value) => setSearchEmpresas(value);
-    
+
     const filterEmpresas =
         searchEmpresas.length > 0
             ? empresasList?.filter((empresa) =>
@@ -71,6 +71,10 @@ const TableEmpresa = ({ empresas }) => {
             )
             : [];
 
+    const handleDeleteEmpresa = async (cnpj) => {
+        await deleteEmpresaByCNPJ(cnpj)
+        await findEmpresas()
+    }
     const renderEmpresasList = () => {
         let dataList = [];
 
@@ -109,9 +113,9 @@ const TableEmpresa = ({ empresas }) => {
                                         Alterar Campanha
                                     </MenuItem>
                                     <MenuItem
-                                        onClick={() => {
-                                            setValueForm(fornecedores);
-                                        }}
+                                       onClick={() => {
+                                        handleDeleteEmpresa(empresas.cnpj)
+                                    }}
                                     >
                                         Excluir Empresa
                                     </MenuItem>
@@ -124,7 +128,7 @@ const TableEmpresa = ({ empresas }) => {
         );
     };
 
-    const handleCreateEmpresa = async (data) => { 
+    const handleCreateEmpresa = async (data) => {
         try {
             if (data) {
                 await createEmpresa(data);
@@ -150,21 +154,21 @@ const TableEmpresa = ({ empresas }) => {
         id,
         field,
         value,
-      }) => {
+    }) => {
         const empresasClone = _.cloneDeep(empresasList);
         const newEmpresa = empresasClone?.map((item) => {
-          if (item._id === id) {
-            if (field === "active") {
-              item.active = !!value;
+            if (item._id === id) {
+                if (field === "active") {
+                    item.active = !!value;
+                }
             }
-          }
-          return item;
+            return item;
         });
-    
+
         if (newEmpresa) setCampaignsList(newEmpresa);
         resetUpdate()
         debounceFieldChangeValue(id, { [field]: value });
-      };
+    };
 
     return (
         <>

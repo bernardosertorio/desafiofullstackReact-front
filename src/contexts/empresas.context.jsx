@@ -82,9 +82,9 @@ export const EmpresasProvider = ({ children }) => {
     }
   };
 
-  const deleteEmpresaById = async (id)  => {
+  const deleteEmpresaByCNPJ = async (cnpj)  => {
     try {
-      await backendAPI.get(`/empresa/delete/${id}`);
+      await backendAPI.delete(`/empresa/delete/${cnpj}`);
 
       return
     } catch (error) {
@@ -100,7 +100,7 @@ export const EmpresasProvider = ({ children }) => {
         findEmpresas,
         findEmpresaById,
         updateEmpresa,
-        deleteEmpresaById
+        deleteEmpresaByCNPJ
       }}
     >
       {children}
